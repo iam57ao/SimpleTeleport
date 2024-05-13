@@ -1,0 +1,5 @@
+name: SimpleSurvival
+author: iam57
+version: '${version}'
+main: com.iam57.simpleteleport.SimpleTeleport
+api-version: '1.20'

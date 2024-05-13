@@ -1,0 +1,30 @@
+configs:
+  request-cooldown-time: 60
+  request-expiration-time: 30
+messages:
+  prefix: "§7[§6SimpleSurvival§7] §r"
+  tp-message:
+    no-console: "§c这个命令只能由控制台执行"
+    no-args: "§c参数不足"
+    player-not-found: "§c未找到玩家或玩家已经离线"
+    no-tp-self: "§c你不能传送到自己"
+    no-tp-request-or-invite: "§c没有传送请求或邀请"
+    player-tp-cooldown: "§c你的传送冷却中"
+    tp-request-sent: "§a你的传送请求已发送"
+    tp-already-request: "§c你已向该玩家发送过传送请求了，正在等待对方处理"
+    tp-request: "§a你收到了一个来自 %player% 的传送请求, 输入 /tpaccept 同意, 输入 /tpdeny 拒绝"
+    tp-invite-sent: "§a你的传送邀请已发送"
+    tp-already-invite: "§c你已向该玩家发送过传送邀请了，正在等待对方处理"
+    tp-invite: "§a你收到了一个来自 %player% 的传送邀请, 输入 /tpaccept 同意, 输入 /tpdeny 拒绝"
+    tp-request-accept: "§a%player% 接受了你的传送请求"
+    tp-request-deny: "§c%player% 拒绝了你的传送请求"
+    tp-request-sent-accept: "§a你接受了 %player% 的传送请求"
+    tp-request-sent-deny: "§c你拒绝了 %player% 的传送请求"
+    tp-invite-accept: "§a%player% 接受了你的传送邀请"
+    tp-invite-deny: "§c%player% 拒绝了你的传送邀请"
+    tp-invite-sent-accept: "§a你接受了 %player% 的传送邀请"
+    tp-invite-sent-deny: "§c你拒绝了 %player% 的传送邀请"
+    tp-request-expiration: "§c来自 %player% 的传送请求已过期"
+    tp-request-sent-expiration: "§c你向 %player% 发送的传送请求已过期"
+    tp-invite-expiration: "§c来自 %player% 的传送邀请已过期"
+    tp-invite-sent-expiration: "§c你向 %player% 发送的传送邀请已过期"
