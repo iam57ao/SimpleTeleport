@@ -3,3 +3,7 @@ author: iam57
 version: '${version}'
 main: com.iam57.simpleteleport.SimpleTeleport
 api-version: '1.20'
+commands:
+  tpa:
+    description: 请求传送到一个玩家
+    usage: /tpa <玩家>
