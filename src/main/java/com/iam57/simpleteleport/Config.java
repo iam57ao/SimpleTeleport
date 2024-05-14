@@ -21,10 +21,10 @@ public class Config {
     }
 
     public static Long getRequestCooldownTime() {
-        return (Long) get("configs.request-cooldown-time");
+        return Long.valueOf((Integer) get("configs.request-cooldown-time"));
     }
 
     public static Long getRequestExpirationTime() {
-        return (Long) get("configs.request-expiration-time");
+        return Long.valueOf((Integer) get("configs.request-expiration-time"));
     }
 }
