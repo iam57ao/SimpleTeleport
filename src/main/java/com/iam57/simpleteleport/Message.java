@@ -27,15 +27,10 @@ public class Message {
 
     public static String getAndReplace(String key, String placeholder, String... args) {
         String message = get(key);
-        StringBuilder sb = new StringBuilder(message);
-        int startIndex = 0;
-        int argIndex = 0;
-        while ((startIndex = sb.indexOf(placeholder, startIndex)) != -1 && argIndex < args.length) {
-            sb.replace(startIndex, startIndex + placeholder.length(), args[argIndex]);
-            startIndex++;
-            argIndex++;
+        for (String arg : args) {
+            message = message.replace(placeholder, arg);
         }
-        return sb.toString();
+        return message;
     }
 
     public static String getAndReplacePlayer(String key, String... args) {
