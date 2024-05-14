@@ -10,3 +10,9 @@ commands:
   tpahere:
     description: 请求一个玩家传送到你这里
     usage: /tpahere <玩家>
+  tpaccept:
+    description: 接受一个传送请求
+    usage: /tpaccept
+  tpdeny:
+    description: 拒绝一个传送请求
+    usage: /tpdeny

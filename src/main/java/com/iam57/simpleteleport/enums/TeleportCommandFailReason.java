@@ -9,4 +9,5 @@ public enum TeleportCommandFailReason {
     PLAYER_IN_COOLDOWN,
     REQUEST_ALREADY_SENT,
     SELF_TELEPORT,
+    NO_REQUEST,
 }

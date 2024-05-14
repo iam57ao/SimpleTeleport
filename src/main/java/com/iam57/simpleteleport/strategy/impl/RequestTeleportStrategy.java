@@ -1,6 +1,8 @@
 package com.iam57.simpleteleport.strategy.impl;
 
+import com.iam57.simpleteleport.entity.TeleportRequest;
 import com.iam57.simpleteleport.strategy.TeleportStrategy;
+import org.bukkit.entity.Player;
 
 /**
  * @author iam57
@@ -8,7 +10,9 @@ import com.iam57.simpleteleport.strategy.TeleportStrategy;
  */
 public class RequestTeleportStrategy implements TeleportStrategy {
     @Override
-    public void executeTeleport() {
-
+    public void executeTeleport(TeleportRequest teleportRequest) {
+        Player requester = teleportRequest.getRequester();
+        Player recipient = teleportRequest.getRecipient();
+        requester.teleport(recipient);
     }
 }

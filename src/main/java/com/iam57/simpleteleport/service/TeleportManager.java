@@ -6,9 +6,7 @@ import com.iam57.simpleteleport.entity.TeleportPlayer;
 import com.iam57.simpleteleport.entity.TeleportRequest;
 import com.iam57.simpleteleport.enums.TeleportCommandFailReason;
 import com.iam57.simpleteleport.enums.TeleportRequestType;
-import com.iam57.simpleteleport.event.TeleportRequestFailEvent;
-import com.iam57.simpleteleport.event.TeleportRequestSuccessEvent;
-import com.iam57.simpleteleport.event.TeleportRequestTimeoutEvent;
+import com.iam57.simpleteleport.event.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -57,7 +55,7 @@ public final class TeleportManager {
         return teleportPlayers.computeIfAbsent(player, (k) -> new TeleportPlayer(player, requestCooldownTime));
     }
 
-    private boolean canSendRequest(Player requester, String recipientName) {
+    private boolean canSendTeleportRequest(Player requester, String recipientName) {
         TeleportPlayer requesterTeleportPlayer = getTeleportPlayer(requester);
         if (requesterTeleportPlayer.inCooldown()) {
             pluginManager.callEvent(new TeleportRequestFailEvent(requester, TeleportCommandFailReason.PLAYER_IN_COOLDOWN));
@@ -79,12 +77,23 @@ public final class TeleportManager {
         return true;
     }
 
+    private boolean canHandleTeleportRequest(Player recipient) {
+        TeleportRequest lastRecipientTeleportRequest = getLastRecipientTeleportRequest(recipient);
+        if (lastRecipientTeleportRequest == null) {
+            pluginManager.callEvent(new TeleportRequestFailEvent(recipient, TeleportCommandFailReason.NO_REQUEST));
+            return false;
+        }
+        if (!lastRecipientTeleportRequest.getRequester().isOnline()) {
+            pluginManager.callEvent(new TeleportRequestFailEvent(recipient, TeleportCommandFailReason.PLAYER_NOT_FOUND));
+            removeTeleportRequest(lastRecipientTeleportRequest);
+            return false;
+        }
+        return true;
+    }
+
     private void setTeleportRequestExpirationTimer(TeleportRequest teleportRequest) {
-        TeleportPlayer requesterTeleportPlayer = getTeleportPlayer(teleportRequest.getRequester());
-        TeleportPlayer recipientTeleportPlayer = getTeleportPlayer(teleportRequest.getRecipient());
         BukkitTask expirationTimer = Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            requesterTeleportPlayer.getTeleportRequests().remove(teleportRequest);
-            recipientTeleportPlayer.getTeleportRequests().remove(teleportRequest);
+            removeTeleportRequest(teleportRequest);
             pluginManager.callEvent(new TeleportRequestTimeoutEvent(teleportRequest));
         }, requestExpirationTime * 20L);
         teleportRequest.setExpirationTimer(expirationTimer);
@@ -96,17 +105,45 @@ public final class TeleportManager {
         return teleportRequest;
     }
 
+    private void removeTeleportRequest(TeleportRequest teleportRequest) {
+        teleportRequest.getExpirationTimer().cancel();
+        getTeleportPlayer(teleportRequest.getRequester()).getTeleportRequests().remove(teleportRequest);
+        getTeleportPlayer(teleportRequest.getRecipient()).getTeleportRequests().remove(teleportRequest);
+    }
+
+    private TeleportRequest getLastRecipientTeleportRequest(Player recipient) {
+        return getTeleportPlayer(recipient).getTeleportRequests().stream().filter(teleportRequest -> teleportRequest.getRecipient().equals(recipient)).findFirst().orElse(null);
+    }
+
+    public void removeTeleportPlayer(Player player) {
+        teleportPlayers.remove(player);
+    }
+
     public void sendTeleportRequest(Player requester, String recipientName, TeleportRequestType type) {
-        if (!canSendRequest(requester, recipientName)) {
+        if (!canSendTeleportRequest(requester, recipientName)) {
             return;
         }
         Player recipient = Bukkit.getPlayer(recipientName);
         TeleportRequest teleportRequest = createTeleportRequest(requester, recipient, type);
         TeleportPlayer requesterTeleportPlayer = getTeleportPlayer(requester);
         TeleportPlayer recipientTeleportPlayer = getTeleportPlayer(recipient);
-        requesterTeleportPlayer.getTeleportRequests().add(teleportRequest);
-        recipientTeleportPlayer.getTeleportRequests().add(teleportRequest);
+        requesterTeleportPlayer.getTeleportRequests().add(0, teleportRequest);
+        recipientTeleportPlayer.getTeleportRequests().add(0, teleportRequest);
         requesterTeleportPlayer.setLastSentRequestTime(Instant.now());
         pluginManager.callEvent(new TeleportRequestSuccessEvent(teleportRequest));
+    }
+
+    public void handleTeleportRequest(Player recipient, boolean isAccept) {
+        if (!canHandleTeleportRequest(recipient)) {
+            return;
+        }
+        TeleportRequest lastRecipientTeleportRequest = getLastRecipientTeleportRequest(recipient);
+        if (isAccept) {
+            lastRecipientTeleportRequest.getTeleportStrategy().executeTeleport(lastRecipientTeleportRequest);
+            pluginManager.callEvent(new AcceptTeleportRequestEvent(lastRecipientTeleportRequest));
+        } else {
+            pluginManager.callEvent(new RejectTeleportRequestEvent(lastRecipientTeleportRequest));
+        }
+        removeTeleportRequest(lastRecipientTeleportRequest);
     }
 }
