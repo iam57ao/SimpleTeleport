@@ -13,7 +13,7 @@ public class TpaCommand extends BasePlayerCommand {
 
     @Override
     public boolean execute(Player player, String[] args) {
-        teleportManager.sendTeleportRequests(player, args[0], TeleportRequestType.REQUEST);
+        teleportManager.sendTeleportRequest(player, args[0], TeleportRequestType.REQUEST);
         return true;
     }
 
