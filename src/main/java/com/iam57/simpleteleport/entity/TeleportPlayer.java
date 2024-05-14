@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.bukkit.entity.Player;
 
 import java.time.Instant;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -24,9 +25,10 @@ public class TeleportPlayer {
     public TeleportPlayer(Player player, Long requestCooldownTime) {
         this.player = player;
         this.requestCooldownTime = requestCooldownTime;
+        teleportRequests = new LinkedList<>();
     }
 
     public boolean inCooldown() {
-        return requestCooldownTime == null || Instant.now().isAfter(lastSentRequestTime.plusSeconds(requestCooldownTime));
+        return lastSentRequestTime != null && Instant.now().isBefore(lastSentRequestTime.plusSeconds(requestCooldownTime));
     }
 }
