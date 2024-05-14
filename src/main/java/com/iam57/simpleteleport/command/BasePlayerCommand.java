@@ -21,8 +21,15 @@ public abstract class BasePlayerCommand implements CommandExecutor {
             sender.sendMessage("只有玩家可以使用此命令");
             return true;
         }
+        if (!validateArgs(args)) {
+            return false;
+        }
         return execute((Player) sender, args);
     }
 
-    public abstract boolean execute(Player player, String[] args);
+    protected boolean validateArgs(String[] args) {
+        return true;
+    }
+
+    protected abstract boolean execute(Player player, String[] args);
 }
