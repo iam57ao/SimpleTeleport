@@ -9,7 +9,6 @@ import com.iam57.simpleteleport.enums.TeleportRequestType;
 import com.iam57.simpleteleport.event.TeleportRequestFailEvent;
 import com.iam57.simpleteleport.event.TeleportRequestSuccessEvent;
 import com.iam57.simpleteleport.event.TeleportRequestTimeoutEvent;
-import com.iam57.simpleteleport.strategy.impl.RequestTeleportStrategy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -82,12 +81,7 @@ public final class TeleportManager {
             pluginManager.callEvent(new TeleportRequestFailEvent(requester, TeleportCommandFailReason.SELF_TELEPORT));
             return;
         }
-        TeleportRequest teleportRequest = new TeleportRequest(
-                requester,
-                recipient,
-                type,
-                new RequestTeleportStrategy()
-        );
+        TeleportRequest teleportRequest = new TeleportRequest(requester, recipient, type);
         setTeleportRequestExpirationTimer(teleportRequest);
         TeleportPlayer recipientTeleportPlayer = getTeleportPlayer(recipient);
         requesterTeleportPlayer.getTeleportRequests().add(teleportRequest);

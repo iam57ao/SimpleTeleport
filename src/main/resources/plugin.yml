@@ -7,3 +7,6 @@ commands:
   tpa:
     description: 请求传送到一个玩家
     usage: /tpa <玩家>
+  tpahere:
+    description: 请求一个玩家传送到你这里
+    usage: /tpahere <玩家>

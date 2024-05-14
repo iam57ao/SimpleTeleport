@@ -2,6 +2,8 @@ package com.iam57.simpleteleport.entity;
 
 import com.iam57.simpleteleport.enums.TeleportRequestType;
 import com.iam57.simpleteleport.strategy.TeleportStrategy;
+import com.iam57.simpleteleport.strategy.impl.InviteTeleportStrategy;
+import com.iam57.simpleteleport.strategy.impl.RequestTeleportStrategy;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
@@ -20,10 +22,10 @@ public class TeleportRequest {
     @Setter
     private BukkitTask expirationTimer;
 
-    public TeleportRequest(Player requester, Player recipient, TeleportRequestType type, TeleportStrategy teleportStrategy) {
-        this.requester = requester;
-        this.teleportStrategy = teleportStrategy;
+    public TeleportRequest(Player requester, Player recipient, TeleportRequestType type) {
         this.type = type;
+        this.requester = requester;
         this.recipient = recipient;
+        this.teleportStrategy = type == TeleportRequestType.REQUEST ? new RequestTeleportStrategy() : new InviteTeleportStrategy();
     }
 }

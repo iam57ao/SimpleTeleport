@@ -2,6 +2,7 @@ package com.iam57.simpleteleport.listener;
 
 import com.iam57.simpleteleport.Message;
 import com.iam57.simpleteleport.entity.TeleportRequest;
+import com.iam57.simpleteleport.enums.TeleportRequestType;
 import com.iam57.simpleteleport.event.TeleportRequestFailEvent;
 import com.iam57.simpleteleport.event.TeleportRequestSuccessEvent;
 import com.iam57.simpleteleport.event.TeleportRequestTimeoutEvent;
@@ -17,9 +18,19 @@ public class TeleportListener implements Listener {
     @EventHandler
     public void onTeleportRequestSuccessEvent(TeleportRequestSuccessEvent event) {
         TeleportRequest teleportRequest = event.getTeleportRequest();
+        TeleportRequestType type = teleportRequest.getType();
         Player requester = teleportRequest.getRequester();
-        requester.sendMessage(Message.get("tp-request-sent"));
-        teleportRequest.getRecipient().sendMessage(Message.getAndReplacePlayer("tp-request", requester.getName()));
+        switch (type) {
+            case REQUEST -> {
+                requester.sendMessage(Message.get("tp-request-sent"));
+                teleportRequest.getRecipient().sendMessage(Message.getAndReplacePlayer("tp-request", requester.getName()));
+            }
+            case INVITE -> {
+                requester.sendMessage(Message.get("tp-invite-sent"));
+                teleportRequest.getRecipient().sendMessage(Message.getAndReplacePlayer("tp-invite", requester.getName()));
+            }
+        }
+
     }
 
     @EventHandler
@@ -36,9 +47,19 @@ public class TeleportListener implements Listener {
     @EventHandler
     public void onTeleportRequestTimeoutEvent(TeleportRequestTimeoutEvent event) {
         TeleportRequest teleportRequest = event.getTeleportRequest();
+        TeleportRequestType type = teleportRequest.getType();
         Player requester = teleportRequest.getRequester();
         Player recipient = teleportRequest.getRecipient();
-        requester.sendMessage(Message.getAndReplacePlayer("tp-request-sent-expiration", recipient.getName()));
-        recipient.sendMessage(Message.getAndReplacePlayer("tp-request-expiration", requester.getName()));
+        switch (type) {
+            case INVITE -> {
+                requester.sendMessage(Message.getAndReplacePlayer("tp-invite-sent-expiration", recipient.getName()));
+                recipient.sendMessage(Message.getAndReplacePlayer("tp-invite-expiration", requester.getName()));
+            }
+            case REQUEST -> {
+                requester.sendMessage(Message.getAndReplacePlayer("tp-request-sent-expiration", recipient.getName()));
+                recipient.sendMessage(Message.getAndReplacePlayer("tp-request-expiration", requester.getName()));
+            }
+        }
+
     }
 }
