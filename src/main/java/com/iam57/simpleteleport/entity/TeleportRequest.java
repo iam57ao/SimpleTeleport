@@ -2,8 +2,7 @@ package com.iam57.simpleteleport.entity;
 
 import com.iam57.simpleteleport.enums.TeleportRequestType;
 import com.iam57.simpleteleport.strategy.TeleportStrategy;
-import com.iam57.simpleteleport.strategy.impl.InviteTeleportStrategy;
-import com.iam57.simpleteleport.strategy.impl.RequestTeleportStrategy;
+import com.iam57.simpleteleport.strategy.TeleportStrategyFactory;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
@@ -26,6 +25,6 @@ public class TeleportRequest {
         this.type = type;
         this.requester = requester;
         this.recipient = recipient;
-        this.teleportStrategy = type == TeleportRequestType.REQUEST ? new RequestTeleportStrategy() : new InviteTeleportStrategy();
+        this.teleportStrategy = TeleportStrategyFactory.createStrategy(type);
     }
 }
