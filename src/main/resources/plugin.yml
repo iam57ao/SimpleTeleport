@@ -1,4 +1,4 @@
-name: SimpleSurvival
+name: SimpleTeleport
 author: iam57
 version: '${version}'
 main: com.iam57.simpleteleport.SimpleTeleport
