@@ -1,30 +1,25 @@
 package com.iam57.simpleteleport;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author iam57
  * @since 2024-05-13 20:24
  */
 public class Config {
-    private static final Map<String, Object> cache = new HashMap<>();
+    private static final Plugin plugin = SimpleTeleport.getPlugin(SimpleTeleport.class);
 
     public static FileConfiguration getConfig() {
-        return SimpleTeleport.getPlugin(SimpleTeleport.class).getConfig();
-    }
-
-    public static Object get(String path) {
-        return cache.computeIfAbsent(path, (k) -> getConfig().get(path));
+        return plugin.getConfig();
     }
 
     public static Long getRequestCooldownTime() {
-        return Long.valueOf((Integer) get("configs.request-cooldown-time"));
+        return getConfig().getLong("configs.request-cooldown-time");
     }
 
     public static Long getRequestExpirationTime() {
-        return Long.valueOf((Integer) get("configs.request-expiration-time"));
+        return getConfig().getLong("configs.request-expiration-time");
     }
 }

@@ -1,6 +1,6 @@
 package com.iam57.simpleteleport.listener;
 
-import com.iam57.simpleteleport.Message;
+import com.iam57.simpleteleport.util.MessageUtil;
 import com.iam57.simpleteleport.entity.TeleportRequest;
 import com.iam57.simpleteleport.event.*;
 import com.iam57.simpleteleport.service.TeleportManager;
@@ -19,8 +19,8 @@ public class TeleportListener implements Listener {
     private void handleTeleportRequest(TeleportRequest teleportRequest, String requesterMessageKey, String recipientMessageKey) {
         Player requester = teleportRequest.getRequester();
         Player recipient = teleportRequest.getRecipient();
-        requester.sendMessage(Message.getAndReplacePlayer(requesterMessageKey, recipient.getName()));
-        recipient.sendMessage(Message.getAndReplacePlayer(recipientMessageKey, requester.getName()));
+        requester.sendMessage(MessageUtil.getAndReplacePlayer(requesterMessageKey, recipient.getName()));
+        recipient.sendMessage(MessageUtil.getAndReplacePlayer(recipientMessageKey, requester.getName()));
     }
 
     @EventHandler
@@ -29,12 +29,12 @@ public class TeleportListener implements Listener {
         Player requester = teleportRequest.getRequester();
         switch (teleportRequest.getType()) {
             case REQUEST -> {
-                requester.sendMessage(Message.get("tp-request-sent"));
-                teleportRequest.getRecipient().sendMessage(Message.getAndReplacePlayer("tp-request", requester.getName()));
+                requester.sendMessage(MessageUtil.get("tp-request-sent"));
+                teleportRequest.getRecipient().sendMessage(MessageUtil.getAndReplacePlayer("tp-request", requester.getName()));
             }
             case INVITE -> {
-                requester.sendMessage(Message.get("tp-invite-sent"));
-                teleportRequest.getRecipient().sendMessage(Message.getAndReplacePlayer("tp-invite", requester.getName()));
+                requester.sendMessage(MessageUtil.get("tp-invite-sent"));
+                teleportRequest.getRecipient().sendMessage(MessageUtil.getAndReplacePlayer("tp-invite", requester.getName()));
             }
         }
 
@@ -44,11 +44,11 @@ public class TeleportListener implements Listener {
     public void onTeleportRequestFailEvent(TeleportRequestFailEvent event) {
         Player requester = event.getPlayer();
         switch (event.getReason()) {
-            case PLAYER_NOT_FOUND -> requester.sendMessage(Message.get("player-not-found"));
-            case PLAYER_IN_COOLDOWN -> requester.sendMessage(Message.get("player-in-cooldown"));
-            case REQUEST_ALREADY_SENT -> requester.sendMessage(Message.get("request-already-sent"));
-            case SELF_TELEPORT -> requester.sendMessage(Message.get("self-teleport"));
-            case NO_REQUEST -> requester.sendMessage(Message.get("no-request"));
+            case PLAYER_NOT_FOUND -> requester.sendMessage(MessageUtil.get("player-not-found"));
+            case PLAYER_IN_COOLDOWN -> requester.sendMessage(MessageUtil.get("player-in-cooldown"));
+            case REQUEST_ALREADY_SENT -> requester.sendMessage(MessageUtil.get("request-already-sent"));
+            case SELF_TELEPORT -> requester.sendMessage(MessageUtil.get("self-teleport"));
+            case NO_REQUEST -> requester.sendMessage(MessageUtil.get("no-request"));
         }
     }
 
